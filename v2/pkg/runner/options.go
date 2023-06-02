@@ -315,8 +315,8 @@ func userHomeDir() string {
 	return usr.HomeDir
 }
 
-// ParseUserOptions parses the command line flags provided by a user
-func ParseUserOptions(options *Options) *Options {
+// Init parses Options provided by a library user
+func Init(options *Options) *Options {
 	logutil.DisableDefaultLogger()
 	// Seed default random number generator
 	rand.Seed(time.Now().UnixNano())
@@ -332,8 +332,6 @@ func ParseUserOptions(options *Options) *Options {
 			gologger.Info().Msgf("Migration successful from %s to %s.\n", defaultConfigLocation, defaultProviderConfigLocation)
 		}
 	}
-
-	//options := &Options{}
 
 	var err error
 	flagSet := goflags.NewFlagSet()
@@ -403,7 +401,7 @@ func ParseUserOptions(options *Options) *Options {
 		os.Exit(1)
 	}
 
-	if options.Config != defaultConfigLocation {
+	if options.Config != "" {
 		// An empty source file is not a fatal error
 		if err := flagSet.MergeConfigFile(options.Config); err != nil && !errors.Is(err, io.EOF) {
 			gologger.Fatal().Msgf("Could not read config: %s\n", err)
